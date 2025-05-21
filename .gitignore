@@ -4,3 +4,6 @@ tokenizers/
 
 #Python Scripts (these are for personal use)
 'check postflair.py'
+
+#macos shenanigans
+.DS_Store

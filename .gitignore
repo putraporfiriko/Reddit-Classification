@@ -1,0 +1,6 @@
+#Folders (venv, tokenizer (go download your own smh))
+venv/
+tokenizers/
+
+#Python Scripts (these are for personal use)
+'check postflair.py'

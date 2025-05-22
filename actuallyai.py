@@ -14,6 +14,10 @@ import re
 import argparse
 import sys
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
 import xgboost as xgb
 from sklearn.preprocessing import StandardScaler
@@ -85,77 +89,40 @@ if args.cosine_similarity:
 #------------------------
 #
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(cos_sim, data_clean['postflairs'], test_size=0.2, random_state=33)
+
+# Split the data
+X_train, X_test, y_train, y_test = train_test_split(
+    cos_sim, data_clean['postflairs'], test_size=0.2, random_state=33
+)
+
 print("Jumlah Data Uji:", X_test.shape)
-print("Jumlah Data Latih:",X_train.shape)
+print("Jumlah Data Latih:", X_train.shape)
 
-# Calculate counts for each category in test set
-serious_test = (y_test == 'Serious').sum()
-other_test = (y_test == 'Other').sum()
-meme_test = (y_test == 'Meme').sum()
-relationship_test = (y_test == 'Relationship').sum()
-social_test = (y_test == 'Social').sum()
-discussion_test = (y_test == 'Discussion').sum()
-media_test = (y_test == 'Media').sum()
-art_test = (y_test == 'Art').sum()
-advice_test = (y_test == 'Advice').sum()
-rant_test = (y_test == 'Rant').sum()
-rip_wii_shop_test = (y_test == 'RIP Wii Shop').sum()
-mod_test = (y_test == 'Mod').sum()
-selfie_test = (y_test == 'Selfie').sum()
+# Get all unique flairs from the loaded data
+all_flairs = data_clean['postflairs'].cat.categories if hasattr(data_clean['postflairs'], 'cat') else data_clean['postflairs'].unique()
 
-# Calculate counts for each category in training set
-serious_train = (y_train == 'Serious').sum()
-other_train = (y_train == 'Other').sum()
-meme_train = (y_train == 'Meme').sum()
-relationship_train = (y_train == 'Relationship').sum()
-social_train = (y_train == 'Social').sum()
-discussion_train = (y_train == 'Discussion').sum()
-media_train = (y_train == 'Media').sum()
-art_train = (y_train == 'Art').sum()
-advice_train = (y_train == 'Advice').sum()
-rant_train = (y_train == 'Rant').sum()
-rip_wii_shop_train = (y_train == 'RIP Wii Shop').sum()
-mod_train = (y_train == 'Mod').sum()
-selfie_train = (y_train == 'Selfie').sum()
-# Print counts for test data categories
-print("Jumlah data uji Serious:", serious_test)
-print("Jumlah data uji Other:", other_test)
-print("Jumlah data uji Meme:", meme_test)
-print("Jumlah data uji Relationship:", relationship_test)
-print("Jumlah data uji Social:", social_test)
-print("Jumlah data uji Discussion:", discussion_test)
-print("Jumlah data uji Media:", media_test)
-print("Jumlah data uji Art:", art_test)
-print("Jumlah data uji Advice:", advice_test)
-print("Jumlah data uji Rant:", rant_test)
-print("Jumlah data uji RIP Wii Shop:", rip_wii_shop_test)
-print("Jumlah data uji Mod:", mod_test)
-print("Jumlah data uji Selfie:", selfie_test)
+print("\nAvailable flairs in this dataset:")
+for flair in all_flairs:
+    print(f"- {flair}")
 
-# Print counts for training data categories
-print("Jumlah data latih Serious:", serious_train)
-print("Jumlah data latih Other:", other_train)
-print("Jumlah data latih Meme:", meme_train)
-print("Jumlah data latih Relationship:", relationship_train)
-print("Jumlah data latih Social:", social_train)
-print("Jumlah data latih Discussion:", discussion_train)
-print("Jumlah data latih Media:", media_train)
-print("Jumlah data latih Art:", art_train)
-print("Jumlah data latih Advice:", advice_train)
-print("Jumlah data latih Rant:", rant_train)
-print("Jumlah data latih RIP Wii Shop:", rip_wii_shop_train)
-print("Jumlah data latih Mod:", mod_train)
-print("Jumlah data latih Selfie:", selfie_train)
-data_clean['postflairs'].value_counts()
+print("\nJumlah data uji per flair:")
+for flair in all_flairs:
+    count = (y_test == flair).sum()
+    print(f"Jumlah data uji {flair}: {count}")
+
+print("\nJumlah data latih per flair:")
+for flair in all_flairs:
+    count = (y_train == flair).sum()
+    print(f"Jumlah data latih {flair}: {count}")
+
+# Optionally, show value counts for all flairs in the full dataset
+#print("\nTotal counts for each flair in the full dataset:")
+# print(data_clean['postflairs'].value_counts())
 
 #------------------------
 # implementing KNN
 # perform algoritma KNN
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-from sklearn.metrics import classification_report
-from sklearn.metrics import confusion_matrix
-from sklearn.neighbors import KNeighborsClassifier
+
 
 clf = KNeighborsClassifier(n_neighbors=7).fit(X_train, y_train)
 predicted = clf.predict(X_test)
@@ -350,8 +317,6 @@ print("f1_score:" , f1_score(y_test, adb_predicted, average="weighted"))
 print("error_rate:", 1-accuracy_score(y_test, adb_predicted))
 
 # visualize the scores using matplotlib
-
-
 # Collect metrics for each model
 model_names = ['KNN', 'Random Forest', 'Gradient Boosting', 'XGBoost', 'AdaBoost']
 accuracies = [

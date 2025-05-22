@@ -41,6 +41,9 @@ while True:
     except ValueError:
         print("Please enter a valid number")
 
+# Remove dicts where postflairs is null or posttitle is present with postflairs as null
+data = [item for item in data if not (item.get('postflairs') is None and 'posttitle' in item)]
+
 # step 2: casefolding
 
 # Create a buffer file for the cleaned data

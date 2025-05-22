@@ -1,6 +1,7 @@
 #Folders (venv, tokenizer (go download your own smh))
 venv/
 tokenizers/
+'Successful JSON exports'/
 
 #Python Scripts (these are for personal use)
 'check postflair.py'

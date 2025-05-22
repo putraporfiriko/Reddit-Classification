@@ -1,6 +1,13 @@
 ## ML-Based Reddit Flair Classification
 
-Scrapes data from Reddit using praw and trains 5 machine learning models to classify Reddit posts into different flairs, and compares different models performance with matplotlib visualization.
+Scrapes data from Reddit using praw and trains 5 machine learning models to classify Reddit posts into different flairs, and compares different models performance with matplotlib visualization. also does model tuning and hyperparameter optimization. ensemble learning :soontm:
+
+used machine learning models:
+- K-Nearest Neighbors
+- Random Forest
+- Gradient Boosting
+- XGBoost
+- AdaBoost
 
 # How to Run:
 1. Clone the repository:
